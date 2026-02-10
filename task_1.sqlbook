@@ -1,0 +1,73 @@
+-- SQLBook: Code
+CREATE DATABASE BankingSystem;
+-- SQLBook: Code
+SHOW DATABASES;
+-- SQLBook: Code
+USE BankingSystem;
+-- SQLBook: Code
+CREATE TABLE Customers(
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(15),
+    City VARCHAR(50),
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- SQLBook: Code
+DESCRIBE Customers;
+-- SQLBook: Code
+CREATE TABLE Accounts(
+    AccountID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT,
+    AccountType VARCHAR(20) NOT NULL,
+    Balance DECIMAL(12,2) NOT NULL,
+    CreatedDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT wrt_customer
+        FOREIGN KEY (CustomerID)
+        REFERENCES Customers(CustomerID)
+);
+-- SQLBook: Code
+DESCRIBE Accounts;
+-- SQLBook: Code
+CREATE TABLE Transactions(
+    TransactionID INT AUTO_INCREMENT PRIMARY KEY,
+    AccountID INT,
+    TransactionType VARCHAR(20) NOT NULL,
+    Amount DECIMAL(12,2) NOT NULL,
+    TransactionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT wrt_account
+        FOREIGN KEY (AccountID)
+        REFERENCES Accounts(AccountID)
+);
+-- SQLBook: Code
+DESCRIBE Transactions;
+-- SQLBook: Code
+INSERT INTO Customers(FirstName, LastName, Email, Phone, City)
+VALUES
+('Harshita', 'Fogat', 'hars.fogat@gmail.com', '9999999999', 'Jaipur'),
+('Anita', 'Khatri', 'anita.khatri@gmail.com', '9123456780', 'Mumbai'),
+('Amit', 'Sharma', 'amit.sharma@gmail.com', '9988776655', 'Delhi');
+-- SQLBook: Code
+INSERT INTO Accounts(CustomerID, AccountType, Balance)
+VALUES
+(1, 'Savings', 10000),
+(2,'Current', 2000);
+-- SQLBook: Code
+INSERT INTO Transactions(AccountID, TransactionType, Amount)
+VALUES
+(1, 'Deposit', 10000),
+(1, 'Deposit', 5000),
+(2, 'Withdrawal', 20000);
+-- SQLBook: Code
+SELECT * FROM Customers;
+-- SQLBook: Code
+SELECT * FROM Accounts;
+-- SQLBook: Code
+SELECT * FROM Transactions;
+-- SQLBook: Code
+SELECT c.FirstName, c.LastName, a.AccountType, a.Balance
+FROM Customers c 
+LEFT JOIN Accounts a   
+ON c.CustomerID = a.CustomerID;
